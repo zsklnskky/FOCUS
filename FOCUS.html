@@ -2365,18 +2365,160 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
 .mr-empty-emoji { font-size: 60px; margin-bottom: 14px; line-height: 1; }
 .mr-empty-text { font-size: 13px; color: var(--text2); line-height: 1.5; max-width: 380px; margin: 8px auto 0; }
 
-/* Responsive (compact narrow window) */
+/* ── MOBILE HAMBURGER (hidden on desktop) ── */
+.mobile-hamburger {
+  display: none;
+  position: fixed;
+  top: 14px; left: 14px;
+  z-index: 300;
+  width: 44px; height: 44px;
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  cursor: pointer;
+  align-items: center; justify-content: center;
+  font-size: 22px;
+  color: var(--text);
+  font-family: inherit;
+  box-shadow: var(--shadow);
+}
+.mobile-hamburger:active { transform: scale(.95); }
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 400;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.sidebar-backdrop.open { display: block; }
+
+/* ── RESPONSIVE — tablet ── */
 @media (max-width: 1100px) {
   .cols { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 800px) {
+
+/* ── RESPONSIVE — phone (≤ 768px) ── */
+@media (max-width: 768px) {
   .shell { padding: 0; gap: 0; }
-  .sidebar, .main { border-radius: 0; }
-  .cols { grid-template-columns: 1fr; }
+
+  /* Sidebar becomes slide-in drawer */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: min(330px, 88vw);
+    transform: translateX(-100%);
+    transition: transform .3s var(--easing);
+    z-index: 500;
+    border-radius: 0;
+    border-right: 1px solid var(--border);
+    border-top: none; border-bottom: none; border-left: none;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* Main full width */
+  .main {
+    width: 100%;
+    border-radius: 0;
+    border: none;
+  }
+
+  /* Hamburger visible */
+  .mobile-hamburger { display: flex; }
+
+  /* Push main-head right of hamburger */
+  .main-head {
+    padding: 14px 14px 12px 70px;
+    min-height: 60px;
+  }
+  .head-back, .head-icon { width: 36px; height: 36px; font-size: 18px; }
+  .proj-title-input { font-size: 16px; }
+  .head-actions .btn { padding: 7px 10px; font-size: 11px; }
+
+  /* WS overview — single column cards */
+  .ws-overview { padding: 70px 14px 30px; }
+  .ws-overview-head { padding-bottom: 16px; margin-bottom: 16px; gap: 14px; }
+  .ws-overview-icon { width: 54px; height: 54px; font-size: 28px; }
+  .ws-overview-name { font-size: 22px; }
+  .ws-overview-meta { font-size: 11px; margin-top: 6px; }
+  .ws-overview-grid { gap: 10px; }
+  .proj-card {
+    min-width: 0; max-width: none; width: 100%;
+    flex: 1 1 100%;
+  }
+
+  /* Kanban — single column stacked vertically */
+  .cols {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 12px;
+  }
+  .col-card { min-height: 160px; }
+  .col-head { padding: 12px 14px; min-height: 48px; }
+  .col-title { font-size: 13px; }
+
+  /* Clock — smaller, top-right corner */
+  .clock-widget {
+    top: 14px; right: 14px; bottom: auto;
+    padding: 5px 10px;
+  }
+  .clock-time { font-size: 14px; }
+  .clock-date { font-size: 8px; margin-top: 2px; }
+
+  /* Filter bar smaller */
+  .filter-bar { padding: 6px 14px; }
+
+  /* Notes — fixed height (not stretch on mobile) */
+  .notes-widget { flex: 0 0 auto; min-height: 0; }
+  .notes-pad { min-height: 80px; max-height: 140px; resize: vertical; }
+
+  /* Modals — smaller padding, more usable on touch */
+  .modal { max-width: 95vw; max-height: 90vh; }
+  .modal-head { padding: 12px 16px; }
+  .modal-body { padding: 14px 16px; }
+  .modal-foot { padding: 12px 16px; }
+  .modal-backdrop { padding: 12px; }
+
+  /* Inputs — 16px min font to prevent iOS auto-zoom */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+  .task-text { font-size: 14px !important; }
+  .wf input, .detail-input, .detail-select, .detail-date, .date-pick,
+  .month-picker-field select, .search-input, .notes-pad, .tag-input, .link-row input {
+    font-size: 16px !important;
+  }
+
+  /* Intro screen smaller on phone */
+  .intro-screen { padding: 30px 20px; }
+  .intro-logo { font-size: 56px; margin-bottom: 18px; }
+  .intro-tagline { font-size: 17px; margin-bottom: 12px; }
+  .intro-description { font-size: 13px; margin-bottom: 24px; }
+  .intro-features { gap: 6px; margin-bottom: 30px; }
+  .intro-features .feature { font-size: 11px; padding: 6px 11px; }
+  .intro-start-btn { padding: 16px 50px; font-size: 14px; letter-spacing: .12em; }
+  .intro-version { font-size: 10px; margin-top: 20px; }
+
+  /* Welcome state — bigger create button on mobile */
+  .empty-state { padding: 60px 20px !important; }
+}
+
+/* ── RESPONSIVE — very small phone (≤ 380px) ── */
+@media (max-width: 380px) {
+  .ws-overview { padding: 60px 10px 24px; }
+  .cols { padding: 10px; gap: 10px; }
+  .ws-overview-name { font-size: 19px; }
+  .clock-widget { padding: 4px 8px; }
+  .clock-time { font-size: 13px; }
 }
 </style>
 </head>
 <body>
+
+<!-- Mobile-only hamburger + backdrop -->
+<button class="mobile-hamburger" id="mobile-hamburger" aria-label="Меню">☰</button>
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
 <div class="shell">
 
@@ -4570,6 +4712,36 @@ document.addEventListener('click', e => {
   if (e.target.closest('#intro-start-btn')) {
     document.getElementById('intro-screen').classList.remove('show');
     return;
+  }
+
+  // Mobile — toggle sidebar
+  if (e.target.closest('#mobile-hamburger')) {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.getElementById('sidebar-backdrop').classList.toggle('open');
+    return;
+  }
+  // Mobile — close sidebar when tapping backdrop
+  if (e.target.closest('#sidebar-backdrop')) {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebar-backdrop').classList.remove('open');
+    return;
+  }
+});
+
+/* Auto-close mobile sidebar after picking a workspace or project */
+function closeMobileSidebar() {
+  if (window.innerWidth <= 768) {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebar-backdrop').classList.remove('open');
+  }
+}
+// Hook into existing actions
+const _origSwitchWs = switchWs;
+switchWs = function(id) { _origSwitchWs(id); closeMobileSidebar(); };
+// Wrap project open click handler — handled inside main delegation, we close from there
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-open-project]')) {
+    setTimeout(closeMobileSidebar, 100);
   }
 });
 
