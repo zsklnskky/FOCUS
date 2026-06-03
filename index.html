@@ -2401,7 +2401,19 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
 
 /* ── RESPONSIVE — phone (≤ 768px) ── */
 @media (max-width: 768px) {
-  .shell { padding: 0; gap: 0; }
+  /* ✱ KEY FIX: allow page to scroll naturally on mobile */
+  html, body {
+    overflow: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+    overflow-x: hidden !important;
+  }
+  .shell {
+    padding: 0; gap: 0;
+    height: auto;
+    min-height: 100vh;
+    display: block;       /* not flex — sidebar will be absolute drawer */
+  }
 
   /* Sidebar becomes slide-in drawer */
   .sidebar {
@@ -2414,14 +2426,22 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
     border-radius: 0;
     border-right: 1px solid var(--border);
     border-top: none; border-bottom: none; border-left: none;
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .sidebar.open { transform: translateX(0); }
 
-  /* Main full width */
+  /* Main full width — scroll naturally, not internally */
   .main {
     width: 100%;
     border-radius: 0;
     border: none;
+    box-shadow: none;
+    overflow: visible;
+    height: auto;
+    min-height: 100vh;
+    display: block;
   }
 
   /* Hamburger visible */
@@ -2436,8 +2456,12 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
   .proj-title-input { font-size: 16px; }
   .head-actions .btn { padding: 7px 10px; font-size: 11px; }
 
-  /* WS overview — single column cards */
-  .ws-overview { padding: 70px 14px 30px; }
+  /* WS overview — single column cards, no internal scroll (page scrolls) */
+  .ws-overview {
+    padding: 70px 14px 30px;
+    overflow: visible;
+    height: auto;
+  }
   .ws-overview-head { padding-bottom: 16px; margin-bottom: 16px; gap: 14px; }
   .ws-overview-icon { width: 54px; height: 54px; font-size: 28px; }
   .ws-overview-name { font-size: 22px; }
@@ -2448,13 +2472,20 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
     flex: 1 1 100%;
   }
 
-  /* Kanban — single column stacked vertically */
+  /* Kanban — single column stacked vertically, no internal scroll */
   .cols {
     grid-template-columns: 1fr;
     padding: 14px;
     gap: 12px;
+    overflow: visible;
+    height: auto;
   }
-  .col-card { min-height: 160px; }
+  .col-card { min-height: 140px; }
+  .filter-bar { padding: 8px 14px; }
+  .main-foot {
+    position: relative;
+    padding: 14px;
+  }
   .col-head { padding: 12px 14px; min-height: 48px; }
   .col-title { font-size: 13px; }
 
@@ -2490,8 +2521,14 @@ html[data-theme="dark"] .col-count { background: rgba(255,255,255,.08); }
     font-size: 16px !important;
   }
 
-  /* Intro screen smaller on phone */
-  .intro-screen { padding: 30px 20px; }
+  /* Intro screen — allow scroll if content overflows */
+  .intro-screen {
+    padding: 30px 20px;
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .intro-content { padding: 20px 0 40px; }
   .intro-logo { font-size: 56px; margin-bottom: 18px; }
   .intro-tagline { font-size: 17px; margin-bottom: 12px; }
   .intro-description { font-size: 13px; margin-bottom: 24px; }
